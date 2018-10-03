@@ -1,0 +1,131 @@
+ <html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Slider - Range slider</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<body>
+ 
+<p>
+  <label for="amount">Sector range:</label>
+  <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+</p>
+ 
+ 
+ <button id="text-button"><p id="text">click</p></button>
+ <div id="slider-box">
+   
+ </div>
+ 
+ <div id="testdiv">
+ <div id="player"></div>
+ </div>
+ 
+
+
+      <!-- https://stackoverflow.com/questions/8869372/how-do-i-automatically-play-a-youtube-video-iframe-api-muted
+      //https://qiita.com/bohebohechan/items/71b3ec5af04bbcd088b8 -->
+ 
+ 
+
+
+  <script>
+      // 1. This code loads the IFrame Player API code asynchronously.
+      var tag = document.createElement('script');
+
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      // 2. This function creates an <iframe> (and YouTube player)
+      //    after the API code downloads.
+      var player;
+      var loaded = false;
+      var youtubeReady = new Promise(function(resolve) {
+        if (loaded) {
+         resolve();
+        }
+        window.onYouTubeIframeAPIReady = function() {
+          loaded = true;
+					resolve();
+        }
+      });
+      youtubeReady.then(function(){
+      	player = new YT.Player('player', {
+          height: '100%',
+          width: '100%',
+          playerVars: {
+            autoplay: 1,
+            loop: 1,
+            start: 8,
+            //controls: 0,
+            //showinfo: 0,
+            autohide: 1,
+            modestbranding: 1,
+            vq: 'hd1080'
+          },
+          videoId: 'kWoxV4HLgKg',
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+      });
+
+      // 3. The API will call this function when the video player is ready.
+      function onPlayerReady(event) {
+        event.target.playVideo();
+        player.mute();
+      }
+
+      var done = false;
+      function onPlayerStateChange(event) {
+
+        if (event.data == YT.PlayerState.ENDED) {
+          event.target.playVideo();
+        }
+      }
+    </script>
+  <script>
+  $(function () {
+  $("#text-button").click(function () {
+    var $sliderbox = $("#slider-box")
+    var $slider_div = $("<div />");
+    $slider_div.attr("id", "slider-range");
+    $sliderbox.empty().append($slider_div)
+    var $testdiv = $("#testdiv");
+    $testdiv.empty().append('<div id="player" />');
+    $("#slider-range").slider({
+      range: true,
+      min: 0,
+      max: 500,
+      values: [75, 300],
+      slide: function (event, ui) {
+        console.log(ui);
+        $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+      }
+    });
+    youtubeReady.then(function(){
+      player = new YT.Player('player', {
+        height: '360',
+        width: '640',
+        videoId: 'M7lc1UVf-VE',
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    });
+    $("#amount").val("$" + $("#slider-range").slider("values", 0) +
+      " - $" + $("#slider-range").slider("values", 1));
+  });
+});
+  </script>
+</body>
+</html>
+ 
+ 
