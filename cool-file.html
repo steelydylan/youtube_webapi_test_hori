@@ -29,19 +29,47 @@
 
       <!-- https://stackoverflow.com/questions/8869372/how-do-i-automatically-play-a-youtube-video-iframe-api-muted
       //https://qiita.com/bohebohechan/items/71b3ec5af04bbcd088b8 -->
- 
- 
+   <script>
+    function test_show_slider() {
+      $("#slider-range").slider({
+      range: true,
+      min: 0,
+      max: 500,
+      values: [75, 300],
+      slide: function (event, ui) {
+        //ここにyoutube動画を再生成すると動きそうだな
+        console.log(ui);
+        $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+      }
+    });
+    }
+  </script>
+ <script>
+    function test_ready_youtube(event) {
+      youtubeReady.then(function(){
+      player = new YT.Player('player', {
+        height: '360',
+        width: '640',
+        playerVars: {
+            autoplay: 1,
+            loop: 1,
+            start: 8,
+            //controls: 0,
+            //showinfo: 0,
+            autohide: 1,
+            modestbranding: 1,
+            vq: 'hd1080'
+        },
+        videoId: 'M7lc1UVf-VE',
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+      });
 
-
-  <script>
-      // 1. This code loads the IFrame Player API code asynchronously.
-      var tag = document.createElement('script');
-
-      tag.src = "https://www.youtube.com/iframe_api";
-      var firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-      // 2. This function creates an <iframe> (and YouTube player)
+    }
+         // 2. This function creates an <iframe> (and YouTube player)
       //    after the API code downloads.
       var player;
       var loaded = false;
@@ -54,28 +82,6 @@
 					resolve();
         }
       });
-      youtubeReady.then(function(){
-      	player = new YT.Player('player', {
-          height: '100%',
-          width: '100%',
-          playerVars: {
-            autoplay: 1,
-            loop: 1,
-            start: 8,
-            //controls: 0,
-            //showinfo: 0,
-            autohide: 1,
-            modestbranding: 1,
-            vq: 'hd1080'
-          },
-          videoId: 'kWoxV4HLgKg',
-          events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
-          }
-        });
-      });
-
       // 3. The API will call this function when the video player is ready.
       function onPlayerReady(event) {
         event.target.playVideo();
@@ -89,6 +95,23 @@
           event.target.playVideo();
         }
       }
+  </script>
+
+
+  <script>
+      // 1. This code loads the IFrame Player API code asynchronously.
+      var tag = document.createElement('script');
+
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+
+    
+      
+      test_ready_youtube();
+
+   
     </script>
   <script>
   $(function () {
@@ -99,32 +122,16 @@
     $sliderbox.empty().append($slider_div)
     var $testdiv = $("#testdiv");
     $testdiv.empty().append('<div id="player" />');
-    $("#slider-range").slider({
-      range: true,
-      min: 0,
-      max: 500,
-      values: [75, 300],
-      slide: function (event, ui) {
-        console.log(ui);
-        $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
-      }
-    });
-    youtubeReady.then(function(){
-      player = new YT.Player('player', {
-        height: '360',
-        width: '640',
-        videoId: 'M7lc1UVf-VE',
-        events: {
-          'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange
-        }
-      });
-    });
+    
+    test_show_slider();
+    test_ready_youtube();
     $("#amount").val("$" + $("#slider-range").slider("values", 0) +
       " - $" + $("#slider-range").slider("values", 1));
   });
 });
   </script>
+
+  
 </body>
 </html>
  
