@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server ./src/index.ts --mode development --open",
-    "build": "webpack ./test/src.ts --development"
+    "build": "webpack ./src/index.ts --development"
   },
   "repository": {
     "type": "git",
