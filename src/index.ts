@@ -5,10 +5,14 @@ YouTubeIframeLoader.load((YT) => {
   const searchBtn = document.querySelector('.js-search-btn');
   const search: HTMLInputElement = document.querySelector('.js-search');
   const sliderWrap = document.querySelector('.js-slider');
+  let player = null;
 
   searchBtn.addEventListener('click', () => {
     const videoId = search.value;
-    const player = new YT.Player('player', {
+    if (player) {
+      player.destroy();
+    }
+    player = new YT.Player('player', {
       height: '390',
       width: '640',
       videoId,
